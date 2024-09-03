@@ -1,0 +1,35 @@
+{
+  "name": "boiler-plate",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "app.js",
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "scripts": {
+    "dev": "NODE_ENV=dev nodemon -r dotenv/config index.js dotenv_config_path=.env.dev",
+    "prod": "NODE_ENV=prod node -r dotenv/config index.js dotenv_config_path=.env.prod"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^7.4.0",
+    "helmet": "^7.1.0",
+    "http-status": "^1.7.4",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.5.3",
+    "morgan": "^1.10.0",
+    "winston": "^3.14.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
