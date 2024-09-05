@@ -1,9 +1,9 @@
 import httpStatus from "http-status";
 import { config } from "../config/config.js";
-import { User, Token } from '../models/index.js';
+import { logger } from '../config/logger.js';
+import { Token } from '../models/index.js';
 import { AppError } from "../utils/index.js";
 import { userService } from "./index.js";
-import { logger } from '../config/logger.js'
 
 import jwt from 'jsonwebtoken';
 

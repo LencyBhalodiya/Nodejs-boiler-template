@@ -9,7 +9,11 @@
   },
   "scripts": {
     "dev": "NODE_ENV=dev nodemon -r dotenv/config index.js dotenv_config_path=.env.dev",
-    "prod": "NODE_ENV=prod node -r dotenv/config index.js dotenv_config_path=.env.prod"
+    "prod": "NODE_ENV=prod node -r dotenv/config index.js dotenv_config_path=.env.prod",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "pre-commit": "npm run lint",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +34,11 @@
     "winston": "^3.14.1"
   },
   "devDependencies": {
+    "@eslint/js": "^9.9.1",
+    "eslint": "^9.9.1",
+    "globals": "^15.9.0",
+    "husky": "^9.1.5",
+    "lint-staged": "^15.2.10",
     "nodemon": "^3.1.4"
   }
 }
