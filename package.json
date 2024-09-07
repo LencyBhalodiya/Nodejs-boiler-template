@@ -38,7 +38,6 @@
     "eslint": "^9.9.1",
     "globals": "^15.9.0",
     "husky": "^9.1.5",
-    "lint-staged": "^15.2.10",
     "nodemon": "^3.1.4"
   }
 }
