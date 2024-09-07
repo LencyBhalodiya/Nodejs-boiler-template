@@ -36,7 +36,6 @@ const checkUserDetails = async (email, password) => {
  * Save a token
  * @param {string} token
  * @param {ObjectId} userId
- * @param {Moment} expires
  * @param {string} type
  * @param {boolean} [blacklisted]
  * @returns {Promise<Token>}
@@ -54,8 +53,8 @@ const saveToken = async (token, userId, type, blacklisted = false) => {
 /**
 * Generate token
 * @param {ObjectId} userId
-* @param {Moment} expires
-* @param {string} [secret]
+* @param {string} type
+* @param {string} [expiresIn]
 * @returns {string}
 */
 const generateToken = (user, type, expiresIn) => {
@@ -130,4 +129,40 @@ const refreshAuth = async (refreshToken) => {
     }
 };
 
-export { checkUserDetails, generateAuthToken, isValid, logout, refreshAuth };
+/**
+ * Reset password
+ * @param {string} resetPasswordToken
+ * @param {string} newPassword
+ * @returns {Promise}
+ */
+const resetPassword = async (resetPasswordToken, newPassword) => {
+    try {
+        const resetPasswordTokenDoc = await verifyToken(resetPasswordToken, 'resetPassword');
+        const user = await userService.getUserById(resetPasswordTokenDoc.user);
+        if (!user) {
+            throw new Error();
+        }
+        await Token.deleteMany({ user: user.id, type: 'resetPassword' });
+        await userService.updateUserById(user.id, { password: newPassword });
+    } catch (error) {
+        logger.error(error.message);
+        throw new AppError(httpStatus.UNAUTHORIZED, 'Password reset failed');
+    }
+};
+
+/**
+ * Generate reset password token
+ * @param {string} email
+ * @returns {Promise<string>}
+ */
+const generateResetPasswordToken = async (email) => {
+    const user = await userService.getUserByEmail(email);
+    if (!user) {
+        throw new AppError(httpStatus.NOT_FOUND, 'No users found with this email');
+    }
+    const resetPasswordToken = generateToken(user, 'resetPassword', config.jwt.resetPasswordExpirationMinutes);
+    await saveToken(resetPasswordToken, user.id, 'resetPassword');
+    return resetPasswordToken;
+};
+
+export { checkUserDetails, generateAuthToken, isValid, logout, refreshAuth, resetPassword, generateResetPasswordToken };

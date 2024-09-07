@@ -34,4 +34,23 @@ const getUserById = async (id) => {
     return User.findById(id);
 };
 
-export { createUser, getUserByEmail, getUserById };
+/**
+ * Update user by id
+ * @param {ObjectId} userId
+ * @param {Object} updateBody
+ * @returns {Promise<User>}
+ */
+const updateUserById = async (userId, updateBody) => {
+    const user = await getUserById(userId);
+    if (!user) {
+        throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+    }
+    if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
+        throw new AppError(httpStatus.BAD_REQUEST, 'Email already taken');
+    }
+    Object.assign(user, updateBody);
+    await user.save();
+    return user;
+};
+
+export { createUser, getUserByEmail, getUserById, updateUserById };

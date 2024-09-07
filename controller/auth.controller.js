@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 import { asyncHandler } from "../utils/index.js";
 import { userRegister, userlogin } from '../validation/auth.validation.js'
-import { authService, userService } from '../services/index.js'
+import { authService, userService, emailService } from '../services/index.js'
 
 const register = asyncHandler(async (req, res) => {
     authService.isValid(userRegister, req);
@@ -27,4 +27,15 @@ const refreshTokens = asyncHandler(async (req, res) => {
     res.send({ ...tokens });
 });
 
-export { register, login, logout, refreshTokens }
+const forgotPassword = asyncHandler(async (req, res) => {
+    const resetPasswordToken = await authService.generateResetPasswordToken(req.body.email);
+    await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
+    res.status(httpStatus.NO_CONTENT).send();
+});
+
+const resetPassword = asyncHandler(async (req, res) => {
+    await authService.resetPassword(req.query.token, req.body.password);
+    res.status(httpStatus.NO_CONTENT).send();
+});
+
+export { register, login, logout, refreshTokens, forgotPassword, resetPassword }

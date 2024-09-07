@@ -35,6 +35,17 @@ export const config = {
         secret: envVars.ACCESS_TOKEN_SECRET,
         accessExpirationMinutes: envVars.ACCESS_TOKEN_EXPIRY,
         refreshExpirationDays: envVars.REFRESH_TOKEN_EXPIRY,
-
+        resetPasswordExpirationMinutes: '5m'
+    },
+    email: {
+        smtp: {
+            host: envVars.SMTP_HOST,
+            port: envVars.SMTP_PORT,
+            auth: {
+                user: envVars.SMTP_USERNAME,
+                pass: envVars.SMTP_PASSWORD,
+            },
+        },
+        from: envVars.EMAIL_FROM,
     },
 }
