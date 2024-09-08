@@ -10,7 +10,7 @@ import {
 
 const router = express.Router();
 
-router.post('/register',      register);
+router.post('/register', register);
 router.post('/login', login);
 router.post('/refresh-token', refreshTokens);
 router.post('/logout', logout);
