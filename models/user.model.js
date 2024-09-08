@@ -2,32 +2,33 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 import bcrypt from 'bcryptjs';
 
-const userSchema = new Schema({
+const userSchema = new Schema(
+  {
     name: {
-        type: String,
-        required: true,
-        trim: true,
+      type: String,
+      required: true,
+      trim: true,
     },
     email: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
-        lowercase: true,
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      lowercase: true,
     },
     password: {
-        type: String,
-        required: true,
-        trim: true,
-        minlength: 8,
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 8,
     },
     role: {
-        type: String,
-        enum: ['user', 'admin'],
-        default: 'user',
+      type: String,
+      enum: ['user', 'admin'],
+      default: 'user',
     },
-},
-    { timestamps: true }
+  },
+  { timestamps: true },
 );
 
 /**
@@ -37,8 +38,8 @@ const userSchema = new Schema({
  * @returns {Promise<boolean>}
  */
 userSchema.static('isEmailTaken', async function isEmailTaken(email, exludeUserId) {
-    const user = await this.findOne({ email, _id: { $ne: exludeUserId } });
-    return !!user;
+  const user = await this.findOne({ email, _id: { $ne: exludeUserId } });
+  return !!user;
 });
 
 /**
@@ -47,22 +48,20 @@ userSchema.static('isEmailTaken', async function isEmailTaken(email, exludeUserI
  * @returns {Promise<boolean>}
  */
 userSchema.method('isPasswordMatch', async function isPasswordMatch(password) {
-    return bcrypt.compare(password, this.password);
+  return bcrypt.compare(password, this.password);
 });
 
 /** @description encrypt password before saving in DB */
 userSchema.pre('save', async function (next) {
-    const user = this;
-    if (user.isModified('password'))
-        user.password = await bcrypt.hash(user.password, 8);
+  const user = this;
+  if (user.isModified('password')) user.password = await bcrypt.hash(user.password, 8);
 
-    next();
-})
-
+  next();
+});
 
 /**
-* @typedef User 
-*/
+ * @typedef User
+ */
 const User = mongoose.model('User', userSchema);
 
 export { User };

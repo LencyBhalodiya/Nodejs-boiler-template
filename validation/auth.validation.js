@@ -1,21 +1,21 @@
-import Joi from "joi";
+import Joi from 'joi';
 
 const password = (value, helpers) => {
-    if (!value.match(/\d/) || !value.match(/[a-zA-Z]/))
-        return helpers.message('password must contain at least 1 letter and 1 number');
+  if (!value.match(/\d/) || !value.match(/[a-zA-Z]/))
+    return helpers.message('password must contain at least 1 letter and 1 number');
 
-    return value;
+  return value;
 };
 
 const userRegister = Joi.object({
-    email: Joi.string().required().email(),
-    password: Joi.string().min(7).required().custom(password),
-    name: Joi.string().min(4).required(),
+  email: Joi.string().required().email(),
+  password: Joi.string().min(7).required().custom(password),
+  name: Joi.string().min(4).required(),
 });
 
 const userlogin = Joi.object({
-    email: Joi.string().required().email(),
-    password: Joi.string().min(7).required().custom(password),
+  email: Joi.string().required().email(),
+  password: Joi.string().min(7).required().custom(password),
 });
 
 export { userRegister, userlogin };
