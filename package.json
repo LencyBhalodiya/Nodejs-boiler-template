@@ -11,8 +11,8 @@
     "dev": "NODE_ENV=dev nodemon -r dotenv/config index.js dotenv_config_path=.env.dev",
     "prod": "NODE_ENV=prod node -r dotenv/config index.js dotenv_config_path=.env.prod",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "pre-commit": "npm run lint",
+    "lint:fix": "npm run lint -- --fix",
+    "pre-commit": "npm run lint:fix",
     "prepare": "husky"
   },
   "keywords": [],
@@ -37,8 +37,11 @@
   "devDependencies": {
     "@eslint/js": "^9.9.1",
     "eslint": "^9.9.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
     "globals": "^15.9.0",
     "husky": "^9.1.5",
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.4",
+    "prettier": "3.3.3"
   }
 }

@@ -1,10 +1,10 @@
 class ApiResponseHandler {
-    constructor(statusCode, data, message = "Success") {
-        this.statusCode = statusCode
-        this.data = data
-        this.message = message
-        this.success = statusCode < 400
-    }
+  constructor(statusCode, data, message = 'Success') {
+    this.statusCode = statusCode;
+    this.data = data;
+    this.message = message;
+    this.success = statusCode < 400;
+  }
 }
 
 /**
@@ -15,8 +15,8 @@ class ApiResponseHandler {
  * @param {string} message
  * @returns {Promise}
  */
-function ApiResponse(res, statusCode, data, message = "Success") {
-    return res.status(statusCode).json(new ApiResponseHandler(statusCode, data, message))
+function ApiResponse(res, statusCode, data, message = 'Success') {
+  return res.status(statusCode).json(new ApiResponseHandler(statusCode, data, message));
 }
 
-export { ApiResponse }
+export { ApiResponse };
