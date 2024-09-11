@@ -4,6 +4,7 @@ import { logger } from '../config/logger.js';
 import { Token } from '../models/index.js';
 import { AppError } from '../utils/index.js';
 import { userService } from './index.js';
+import ACTIONS from '../constants/constants.js';
 
 import jwt from 'jsonwebtoken';
 
@@ -93,9 +94,9 @@ const verifyToken = async (token, type) => {
  */
 const generateAuthToken = async (user) => {
   try {
-    const accessToken = generateToken(user, 'access', config.jwt.accessExpirationMinutes);
-    const refreshToken = generateToken(user, 'refresh', config.jwt.refreshExpirationDays);
-    await saveToken(refreshToken, user._id, 'refresh');
+    const accessToken = generateToken(user, ACTIONS.ACCESS_TOKEN, config.jwt.accessExpirationMinutes);
+    const refreshToken = generateToken(user, ACTIONS.REFRESH_TOKEN, config.jwt.refreshExpirationDays);
+    await saveToken(refreshToken, user._id, ACTIONS.REFRESH_TOKEN);
     return { accessToken, refreshToken };
   } catch (error) {
     logger.error(`Error in generateAuthToken: ${error.message}`);
@@ -110,7 +111,7 @@ const generateAuthToken = async (user) => {
 const logout = async (refreshToken) => {
   const refreshTokenDoc = await Token.findOneAndDelete({
     token: refreshToken,
-    type: 'refresh',
+    type: ACTIONS.REFRESH_TOKEN,
     blacklisted: false,
   });
   if (!refreshTokenDoc) throw new AppError(httpStatus.NOT_FOUND, 'Refresh Token Not found');
@@ -123,13 +124,13 @@ const logout = async (refreshToken) => {
  */
 const refreshAuth = async (refreshToken) => {
   try {
-    const refreshTokenDoc = await verifyToken(refreshToken, 'refresh');
+    const refreshTokenDoc = await verifyToken(refreshToken, ACTIONS.REFRESH_TOKEN);
     const user = await userService.getUserById(refreshTokenDoc.user);
     if (!user) throw new Error();
 
     await Token.findOneAndDelete({
       token: refreshToken,
-      type: 'refresh',
+      type: ACTIONS.REFRESH_TOKEN,
       blacklisted: false,
     });
     return generateAuthToken(user);
@@ -152,7 +153,7 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
     if (!user) {
       throw new Error();
     }
-    await Token.deleteMany({ user: user.id, type: 'resetPassword' });
+    await Token.deleteMany({ user: user.id, type: ACTIONS.RESET_PASSWORD });
     await userService.updateUserById(user.id, { password: newPassword });
   } catch (error) {
     logger.error(error.message);
@@ -170,8 +171,8 @@ const generateResetPasswordToken = async (email) => {
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'No users found with this email');
   }
-  const resetPasswordToken = generateToken(user, 'resetPassword', config.jwt.resetPasswordExpirationMinutes);
-  await saveToken(resetPasswordToken, user.id, 'resetPassword');
+  const resetPasswordToken = generateToken(user, ACTIONS.RESET_PASSWORD, config.jwt.resetPasswordExpirationMinutes);
+  await saveToken(resetPasswordToken, user.id, ACTIONS.RESET_PASSWORD);
   return resetPasswordToken;
 };
 
