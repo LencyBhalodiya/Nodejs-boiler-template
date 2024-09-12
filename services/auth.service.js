@@ -5,7 +5,6 @@ import { Token } from '../models/index.js';
 import { AppError } from '../utils/index.js';
 import { userService } from './index.js';
 import ACTIONS from '../constants/constants.js';
-
 import jwt from 'jsonwebtoken';
 
 /**
